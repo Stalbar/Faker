@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Faker.Core.Classes
 {
-    internal class DateTimeGenerator
+    public class DateTimeGenerator
     {
     }
 }

@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Faker.Core.Classes
 {
-    internal class Generator
+    public abstract class Generator
     {
+        private static readonly Random _random = new Random();
+        protected static byte[] GenerateBytes(int bytesCountToGenerate)
+        {
+            byte[] result = new byte[bytesCountToGenerate];
+            _random.NextBytes(result);
+            return result;
+        }
     }
 }

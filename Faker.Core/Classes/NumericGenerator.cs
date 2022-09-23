@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Faker.Core.Classes
+﻿namespace Faker.Core.Classes
 {
-    internal class NumericGenerator
+    public class NumericGenerator: Generator
     {
+        private static short GenerateShort() => BitConverter.ToInt16(GenerateBytes(sizeof(short)));
+        private static ushort GenerateUShort() => BitConverter.ToUInt16(GenerateBytes(sizeof(ushort)));
+        private static int GenerateInt() => BitConverter.ToInt32(GenerateBytes(sizeof(int)));
+        private static uint GenerateUInt() => BitConverter.ToUInt32(GenerateBytes(sizeof(uint)));
+        private static long GenerateLong() => BitConverter.ToInt64(GenerateBytes(sizeof(long)));
+        private static ulong GenerateULong() => BitConverter.ToUInt64(GenerateBytes(sizeof(ulong)));
+        private static float GenerateFloat() => BitConverter.ToSingle(GenerateBytes(sizeof(float)));
+        private static double GenerateDouble() => BitConverter.ToDouble(GenerateBytes(sizeof(double)));
+
     }
 }
