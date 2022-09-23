@@ -8,7 +8,7 @@ namespace Faker.Core.Classes
 {
     public abstract class Generator
     {
-        private static readonly Random _random = new Random();
+        protected static readonly Random _random = new Random();
         protected static byte[] GenerateBytes(int bytesCountToGenerate)
         {
             byte[] result = new byte[bytesCountToGenerate];
