@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using System.Reflection;
 
 namespace Faker.Core.Classes
 {
@@ -13,6 +10,15 @@ namespace Faker.Core.Classes
         private const int _minStringLength = 0;
 
         private const int _maxStringLength = 40;
+
+        static StringGenerator()
+        {
+            var generationMethods = typeof(StringGenerator).GetMethods(BindingFlags.Static | BindingFlags.NonPublic);
+            foreach (var method in generationMethods)
+            {
+                GenerateMethods[method.ReturnType] = () => method.Invoke(null, null);
+            }
+        }
 
         private static string GenerateString()
         {

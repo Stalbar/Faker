@@ -1,7 +1,18 @@
-﻿namespace Faker.Core.Classes
+﻿using System.Reflection;
+
+namespace Faker.Core.Classes
 {
     public class NumericGenerator: Generator
     {
+        static NumericGenerator()
+        {
+            var generationMethods = typeof(NumericGenerator).GetMethods(BindingFlags.Static | BindingFlags.NonPublic);
+            foreach (var method in generationMethods)
+            {
+                GenerateMethods[method.ReturnType] = () => method.Invoke(null, null);
+            }
+        }
+
         private static short GenerateShort() => BitConverter.ToInt16(GenerateBytes(sizeof(short)));
         private static ushort GenerateUShort() => BitConverter.ToUInt16(GenerateBytes(sizeof(ushort)));
         private static int GenerateInt() => BitConverter.ToInt32(GenerateBytes(sizeof(int)));
