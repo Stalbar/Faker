@@ -3,6 +3,7 @@ using Faker.Core.Classes;
 using Faker.CycleDependencyChecker;
 using Faker.CycleDependencyChecker.Exceptions;
 using System.Reflection;
+using System.Collections;
 
 namespace Faker.Core
 {
@@ -25,24 +26,36 @@ namespace Faker.Core
         {
             if (Generator.GenerateMethods.ContainsKey(type))
                 return Generator.GenerateMethods[type]();
+            if (type.GetGenericTypeDefinition() == typeof(List<>))
+                return CreateListOfObjects(type);
             return CreateSingleObject(type);
+        }
+
+        private object CreateListOfObjects(Type type)
+        {
+            int listCapacity = 7;
+            var result = FillList(type, listCapacity);
+            return result;
+        }
+
+        private IList FillList(Type type, int capacity)
+        {
+            var result = Activator.CreateInstance(type) as IList;
+            for (int i = 0; i < capacity; i++)
+            {
+                result.Add(Create(type.GetGenericArguments()[0]));
+            }
+            return result;
         }
 
         private object CreateSingleObject(Type type)
         {
             var constructor = GetMaxParametersConstructor(type);
-            var constructorParameters = constructor.GetParameters();
             var publicFields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
             var publicSetters = GetPublicSetters(type);
             object result = CreateObjectViaConstructor(constructor);
-            foreach (var field in publicFields)
-            {
-                field.SetValue(result, Create(field.FieldType));
-            }
-            foreach (var property in publicSetters)
-            {
-                property.SetValue(result, Create(property.PropertyType));
-            }
+            SetValuesInObjectFields(result, publicFields);
+            SetValuesInObjectProperties(result, publicSetters);
             return result;
         }
 
@@ -84,6 +97,22 @@ namespace Faker.Core
                 constructorParams.Add(Create(param.ParameterType));
             }
             return constructorParams;
+        }
+
+        private void SetValuesInObjectFields(object obj, FieldInfo[] fields)
+        {
+            foreach (var field in fields)
+            {
+                field.SetValue(obj, Create(field.FieldType));
+            }
+        }
+
+        private void SetValuesInObjectProperties(object obj, PropertyInfo[] properties)
+        {
+            foreach (var property in properties)
+            {
+                property.SetValue(obj, Create(property.PropertyType));
+            }
         }
     }
 }
