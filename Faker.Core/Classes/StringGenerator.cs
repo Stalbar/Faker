@@ -26,7 +26,7 @@ namespace Faker.Core.Classes
             StringBuilder sb = new StringBuilder(length);
             for (int i = 0; i < length; i++)
             {
-                char randomSymbol = symbols[_random.Next(symbols.Length)];
+                char randomSymbol = GenerateChar();
                 sb.Append(randomSymbol);
             }
             return sb.ToString();
