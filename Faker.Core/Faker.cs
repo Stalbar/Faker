@@ -1,4 +1,5 @@
 ﻿using Faker.Core.Interfaces;
+using Faker.Core.Classes;
 
 namespace Faker.Core
 {
@@ -6,7 +7,14 @@ namespace Faker.Core
     {
         public T Create<T>()
         {
-            throw new NotImplementedException();
+            return (T)Create(typeof(T));
+        }
+
+        private object Create(Type type)
+        {
+            if (Generator.GenerateMethods.ContainsKey(type))
+                return Generator.GenerateMethods[type]();
+            return null;
         }
     }
 }

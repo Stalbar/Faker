@@ -7,7 +7,7 @@ namespace Faker.Core.Classes
     {
         private static string symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;:\"\'{}[]()-+=_?\\/<>,.!@#$%^&";
 
-        private const int _minStringLength = 0;
+        private const int _minStringLength = 1;
 
         private const int _maxStringLength = 40;
 
