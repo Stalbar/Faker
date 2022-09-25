@@ -25,7 +25,7 @@ namespace Faker.CycleDependencyChecker
             var fields = type.GetFields();
             foreach (var field in fields)
             {
-                if (field.FieldType.IsClass)
+                if (field.FieldType.IsClass && field.FieldType != typeof(string))
                     CheckForCycleDependency(field.FieldType);
             }
         }
