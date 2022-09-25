@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Faker.CycleDependencyChecker\Faker.CycleDependencyChecker.csproj" />
+  </ItemGroup>
+
 </Project>
