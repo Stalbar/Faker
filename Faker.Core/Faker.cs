@@ -26,7 +26,7 @@ namespace Faker.Core
         {
             if (Generator.GenerateMethods.ContainsKey(type))
                 return Generator.GenerateMethods[type]();
-            if (type.GetGenericTypeDefinition() == typeof(List<>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                 return CreateListOfObjects(type);
             return CreateSingleObject(type);
         }
@@ -103,6 +103,7 @@ namespace Faker.Core
         {
             foreach (var field in fields)
             {
+                var fieldType = field.FieldType;
                 field.SetValue(obj, Create(field.FieldType));
             }
         }
