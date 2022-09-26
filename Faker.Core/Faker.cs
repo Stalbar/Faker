@@ -103,8 +103,8 @@ namespace Faker.Core
         {
             foreach (var field in fields)
             {
-                var fieldType = field.FieldType;
-                field.SetValue(obj, Create(field.FieldType));
+                if (!IsFieldSetInConstructor(obj, field))
+                    field.SetValue(obj, Create(field.FieldType));
             }
         }
 
@@ -112,8 +112,32 @@ namespace Faker.Core
         {
             foreach (var property in properties)
             {
-                property.SetValue(obj, Create(property.PropertyType));
+                if (!IsPropertySetInConsturctor(obj, property))
+                    property.SetValue(obj, Create(property.PropertyType));
             }
+        }
+
+        private bool IsFieldSetInConstructor(object obj, FieldInfo fieldInfo)
+        {
+            var fieldType = fieldInfo.FieldType;
+            if (fieldType.IsValueType && fieldInfo.GetValue(obj).Equals(Activator.CreateInstance(fieldType)))
+                return false;
+            else if (fieldType.IsClass && fieldInfo.GetValue(obj) == null)
+                return false;
+            else
+                return true;
+                
+        }
+
+        private bool IsPropertySetInConsturctor(object obj, PropertyInfo propertyInfo)
+        {
+            var propertyType = propertyInfo.PropertyType;
+            if (propertyType.IsValueType && propertyInfo.GetValue(obj).Equals(Activator.CreateInstance(propertyType)))
+                return false;
+            else if (propertyType.IsClass && propertyInfo.GetValue(obj) == null)
+                return false;
+            else
+                return true;
         }
     }
 }
