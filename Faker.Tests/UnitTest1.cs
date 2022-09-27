@@ -1,8 +1,7 @@
-using Faker.CycleDependencyChecker;
-using Faker.Core;
-using System.Collections.Generic;
 using Faker.Core.Interfaces;
 using Faker.Tests.TestClasses;
+using Faker.CycleDependencyChecker.Exceptions;
+
 namespace Faker.Tests
 {
     [TestClass]
@@ -72,6 +71,13 @@ namespace Faker.Tests
             var testClass = _faker.Create<ClassWithList>();
             Assert.AreNotEqual(testClass, null);
             Assert.AreNotEqual(testClass.Ids, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CycleDependencyException))]
+        public void TestWithCycleDependency()
+        {
+            var testClass = _faker.Create<ClassWithCycleDependency1>();
         }
     }
 }
