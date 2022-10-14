@@ -50,10 +50,19 @@ namespace Faker.Core
 
         private object CreateSingleObject(Type type)
         {
-            var constructor = GetMaxParametersConstructor(type);
+            var constructors = type.GetConstructors().OrderByDescending(x => x.GetParameters().Length).ToArray();
             var publicFields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
             var publicSetters = GetPublicSetters(type);
-            object result = CreateObjectViaConstructor(constructor);
+            object result = null;
+            int i = 0;
+            while (result == null)
+            {
+                if (i < constructors.Length)
+                    result = CreateObjectViaConstructor(constructors[i]);
+                else
+                    break;
+                i++;
+            }
             SetValuesInObjectFields(result, publicFields);
             SetValuesInObjectProperties(result, publicSetters);
             return result;
@@ -86,7 +95,16 @@ namespace Faker.Core
         private object CreateObjectViaConstructor(ConstructorInfo constructor)
         {
             List<Object> constructorParams = GetConstructorParameters(constructor);
-            return constructor.Invoke(constructorParams.ToArray());
+            object result = null;
+            try
+            {
+                result = constructor.Invoke(constructorParams.ToArray());
+            }
+            catch
+            {
+                result = null;
+            }
+            return result;
         }
 
         private List<Object> GetConstructorParameters(ConstructorInfo constructor)

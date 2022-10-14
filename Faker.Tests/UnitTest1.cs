@@ -79,5 +79,12 @@ namespace Faker.Tests
         {
             var testClass = _faker.Create<ClassWithCycleDependency1>();
         }
+
+        [TestMethod]
+        public void TestWithPrivateConstructor()
+        {
+            var testClass = _faker.Create<ClassWithPrivateConstructor>();
+            Assert.AreNotEqual(null, testClass);
+        }
     }
 }
