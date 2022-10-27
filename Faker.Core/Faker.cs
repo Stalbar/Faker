@@ -55,13 +55,14 @@ namespace Faker.Core
             var publicSetters = GetPublicSetters(type);
             object result = null;
             int i = 0;
-            while (result == null)
+            while (result == null && i < constructors.Length)
             {
-                if (i < constructors.Length)
-                    result = CreateObjectViaConstructor(constructors[i]);
-                else
-                    break;
+                result = CreateObjectViaConstructor(constructors[i]);
                 i++;
+            }
+            if (result == null)
+            {
+                throw new Exception("Can not be created via constructor");
             }
             SetValuesInObjectFields(result, publicFields);
             SetValuesInObjectProperties(result, publicSetters);
